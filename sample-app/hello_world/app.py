@@ -23,7 +23,7 @@ else:
 
 #Function that setup the browser parameters and return browser object.
 def open_browser():
-    fake_user_agent = Faker()
+    # fake_user_agent = Faker()
     options = webdriver.ChromeOptions()
     options.binary_location = '/opt/chrome/chrome'
     options.add_experimental_option("excludeSwitches", ['enable-automation'])
@@ -35,7 +35,7 @@ def open_browser():
     options.add_argument('--allow-running-insecure-content')
     options.add_argument('--disable-web-security')
     options.add_argument('--lang=' + random.choice(language_list))
-    options.add_argument('--user-agent=' + fake_user_agent.user_agent())
+    # options.add_argument('--user-agent=' + fake_user_agent.user_agent())
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument("--disable-gpu")
@@ -54,29 +54,32 @@ def open_browser():
 
 #Our main Lambda function
 def lambda_handler(event, context):
+    print("lambda_handler")
+
     try:
 
-        # Open browser
+        # # Open browser
         browser = open_browser()
 
-        # Clean cookies
-        browser.delete_all_cookies()
-        browser.set_page_load_timeout(60)
+        # # Clean cookies
+        # browser.delete_all_cookies()
+        # browser.set_page_load_timeout(60)
 
         # Open web
-        # logging.info("Opening web " + os.environ['URL'])
-        browser.get(os.environ['URL'])
+        urlToFetch = "https://www.infodocs.co.za"
+        print("Opening web " + urlToFetch)
+        # browser.get(urlToFetch)
 
-        #get text from google
-        target_XPATH = '/html/body/div[1]/div[3]/form/div[1]/div[1]/div[3]/center/input[1]'
-        target = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, target_XPATH)))
-        return_val = target.text
+        # #get text from google
+        # target_XPATH = '/html/body'
+        # target = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, target_XPATH)))
+        # return_val = target.text
 
-        #browser.close() might not be required since the container is destroyed anyway after done.
+        # #browser.close() might not be required since the container is destroyed anyway after done.
         browser.close()
-        return {
-            "return": return_val
-        }
+        # return {
+        #     "return": return_val
+        # }
 
     except AssertionError as msg:
         logging.error(msg)
