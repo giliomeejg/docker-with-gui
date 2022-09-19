@@ -3,4 +3,5 @@ services:
   python:
     build:
       dockerfile: Dockerfile
+      context: ./
     container_name: python
